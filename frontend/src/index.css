@@ -1,0 +1,273 @@
+
+ /* @import "tailwindcss/components";
+@import "tailwindcss/utilities"; */
+/* ✅ CORRECT for Tailwind v4 */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+
+
+/* ✅ Optional: Add custom styles below */
+
+
+/* Or, for Tailwind v4, if base/components are deprecated, use: */
+@import "tailwindcss"; 
+@plugin "daisyui"; 
+
+:root {
+ background: url('/7.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --galaxy-pink: rgba(255, 153, 102, 0.16);
+  --galaxy-blue: rgba(255, 215, 120, 0.14);
+  --sidebar-grad-top: rgba(10, 12, 20, 0.38);
+  --sidebar-grad-bottom: rgba(10, 12, 20, 0.18);
+  --overlay-top: rgba(10, 12, 20, 0.55);
+  --overlay-mid: rgba(10, 12, 20, 0.35);
+  --overlay-bottom: rgba(10, 12, 20, 0.6);
+  --comet-core: rgba(255, 255, 255, 0.95);
+  --comet-tail: rgba(255, 255, 255, 0.25);
+  --comet-glow: rgba(255, 150, 80, 0.45);
+} 
+/* Comet background animation */
+.comet-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.comet {
+  position: absolute;
+  width: 180px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--comet-core) 0%, var(--comet-tail) 60%, rgba(255,255,255,0) 100%);
+  border-radius: 9999px;
+  transform: translate3d(0,0,0) rotate(225deg);
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.8)) drop-shadow(0 0 16px var(--comet-glow));
+  animation: cometMove 7s linear infinite;
+  opacity: 0.85;
+}
+
+@keyframes cometMove {
+  0% {
+    transform: translate(-20vw, -20vh) rotate(225deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(120vw, 120vh) rotate(225deg);
+    opacity: 0;
+  }
+}
+
+/* Ken Burns animated background layer and overlay */
+.bg-kenburns {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: url('/7.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.05);
+  animation: kbZoom 35s ease-in-out infinite alternate;
+}
+
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--overlay-top),
+    var(--overlay-mid) 40%,
+    var(--overlay-bottom)
+  );
+}
+
+@keyframes kbZoom {
+  0% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+    filter: saturate(100%) brightness(100%);
+  }
+  100% {
+    transform: scale(1.15) translate3d(0, 0, 0);
+    filter: saturate(110%) brightness(105%);
+  }
+}
+
+/* Sidebar galaxy background (scoped) */
+.sidebar-galaxy {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(closest-side at 20% 30%, var(--galaxy-pink), transparent 60%),
+              radial-gradient(closest-side at 80% 60%, var(--galaxy-blue), transparent 55%),
+              linear-gradient(180deg, var(--sidebar-grad-top), var(--sidebar-grad-bottom));
+}
+
+.sidebar-galaxy::before {
+  content: "";
+  position: absolute;
+  left: -25%;
+  top: -25%;
+  width: 150%;
+  height: 150%;
+  background: conic-gradient(from 0deg, rgba(255,255,255,0.06) 0 8deg, transparent 8deg 20deg);
+  filter: blur(24px);
+  animation: galaxyRotate 60s linear infinite;
+}
+
+.sidebar-galaxy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.75), transparent 60%),
+    radial-gradient(1px 1px at 35% 65%, rgba(255,255,255,0.7), transparent 60%),
+    radial-gradient(1px 1px at 70% 35%, rgba(255,255,255,0.8), transparent 60%),
+    radial-gradient(1px 1px at 85% 75%, rgba(255,255,255,0.6), transparent 60%);
+  opacity: 0.7;
+  animation: twinkle 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes galaxyRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.35; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.5; }
+}
+
+/* Light blader overlay for panels */
+.panel-light-blader {
+  position: absolute;
+  inset: 0;
+  z-index: 2; /* above soft shadow (1), below content (Tailwind z-10) */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.panel-light-blader::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: -40%;
+  width: 180%;
+  height: 140%;
+  background: linear-gradient(60deg,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0) 65%
+  );
+  filter: blur(8px) saturate(110%);
+  transform: translate3d(0,0,0);
+  animation: bladerSweep 18s ease-in-out infinite;
+}
+
+@keyframes bladerSweep {
+  0% { transform: translate(-10%, -5%) rotate(0.0001deg); opacity: 0.55; }
+  50% { transform: translate(10%, 5%) rotate(0.0001deg); opacity: 0.85; }
+  100% { transform: translate(-10%, -5%) rotate(0.0001deg); opacity: 0.55; }
+}
+
+/* Very light soft shadow beneath blader */
+.panel-soft-shadow {
+  position: absolute;
+  inset: 0;
+  z-index: 1; /* above galaxy */
+  pointer-events: none;
+  background:
+    radial-gradient(60% 40% at 20% 15%, rgba(0,0,0,0.18), transparent 70%),
+    radial-gradient(50% 35% at 80% 85%, rgba(0,0,0,0.14), transparent 70%);
+  filter: blur(10px);
+  opacity: 0.6;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  font-size: 1.1em;
+  background-color: rgba(135, 131, 120, 0.15);
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+}
+/* 
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+} 
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */
