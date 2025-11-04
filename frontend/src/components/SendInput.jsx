@@ -16,7 +16,7 @@ function SendInput() {
       // send message to backend using socket io
       axios.defaults.withCredentials = true;
       const res = await axios.post(
-        `http://localhost:8080/api/v1/message/send/${selectedUser?._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/message/send/${selectedUser?._id}`,
         { message },
         {
           headers: {

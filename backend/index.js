@@ -9,6 +9,7 @@ import friendRoute from './routes/friendRoute.js';
 import cookieParser from 'cookie-parser';
 import {app,server} from './socket/socket.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config({});
 const PORT = process.env.PORT || 5000;
@@ -25,9 +26,9 @@ app.use(cookieParser());
 //     // optionSuccessStatus:200
 // }
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials:true ,   //access-control-allow-credentials:true
-     optionSuccessStatus:200
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    credentials: true,   //access-control-allow-credentials:true
+    optionSuccessStatus: 200
 }));
 
 
@@ -36,12 +37,14 @@ app.use("/api/v1/user",userRoute);
 app.use("/api/v1/message",messageRoute);
 app.use("/api/v1/friends", friendRoute);
 
-const __dirname1 = path.resolve();
+// Resolve frontend dist path correctly in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDistPath = path.resolve(__dirname, '../frontend/dist');
+
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname1, "/frontend/dist")));
-  app.use((req, res) =>
-    res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"))
-  );
+  app.use(express.static(clientDistPath));
+  app.use((req, res) => res.sendFile(path.join(clientDistPath, 'index.html')));
 } else {
   app.use("/", (req, res) => {
     res.send("API is running...");

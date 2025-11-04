@@ -10,7 +10,7 @@ import {persistStore} from 'redux-persist';
 
   let persistor = persistStore(store);
 
-export const BASE_URL="http://localhost:8080";
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
