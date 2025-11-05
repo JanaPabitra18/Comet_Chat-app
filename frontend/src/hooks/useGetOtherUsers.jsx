@@ -1,15 +1,15 @@
-
-
 import React, { useEffect } from 'react';
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOtherUsers } from '../redux/userSlice';
 import { BASE_URL } from '../config.js';
 
 const useGetOtherUsers = () => {
     const dispatch = useDispatch();
+    const authUser = useSelector((s) => s.user.authUser);
 
     useEffect(() => {
+        if (!authUser) return; // not authenticated yet
         const fetchOtherUsers = async () => {
             try {
                 axios.defaults.withCredentials = true;
@@ -18,11 +18,14 @@ const useGetOtherUsers = () => {
                 console.log("other users -> ",res);
                 dispatch(setOtherUsers(res.data.otheruser));
             } catch (error) {
-                console.log(error);
+                // Ignore unauthorized during initial load; user may not be logged in yet
+                if (error?.response?.status !== 401) {
+                  console.log(error);
+                }
             }
         }
         fetchOtherUsers();
-    }, [dispatch])
+    }, [dispatch, authUser])
 
 }
 
