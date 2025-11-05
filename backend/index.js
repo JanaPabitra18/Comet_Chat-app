@@ -26,15 +26,22 @@ app.use(cookieParser());
 //     // optionSuccessStatus:200
 // }
 // Support multiple allowed origins via comma-separated CLIENT_ORIGIN
+const normalizeOrigin = (u) => (u || '')
+  .toString()
+  .trim()
+  .replace(/\/$/, '')
+  .toLowerCase();
+
 const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
   .split(',')
-  .map((o) => o.trim());
+  .map((o) => normalizeOrigin(o));
 
 const corsConfig = {
   origin: (origin, callback) => {
     // Allow non-browser requests (no origin) and matching origins
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    const norm = normalizeOrigin(origin);
+    if (allowedOrigins.includes(norm)) return callback(null, true);
     return callback(new Error(`CORS: Origin not allowed: ${origin}`));
   },
   credentials: true,
