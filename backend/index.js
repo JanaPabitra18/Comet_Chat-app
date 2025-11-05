@@ -30,21 +30,23 @@ const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
   .split(',')
   .map((o) => o.trim());
 
-app.use(cors({
-    origin: allowedOrigins,
-    credentials: true,   //access-control-allow-credentials:true
-    methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-    allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
-    optionSuccessStatus: 200
-}));
+const corsConfig = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (no origin) and matching origins
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS: Origin not allowed: ${origin}`));
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsConfig));
 
 // Explicitly handle CORS preflight for all routes
-app.options('*', cors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-    allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
-}));
+app.options('*', cors(corsConfig));
 
 
 //routes
