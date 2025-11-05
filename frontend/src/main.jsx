@@ -16,6 +16,18 @@ import { BASE_URL } from './config.js';
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.withCredentials = true;
 
+// Attach Authorization header from localStorage token if present
+axios.interceptors.request.use((config) => {
+  try {
+    const t = localStorage.getItem('auth_token');
+    if (t) {
+      config.headers = config.headers || {};
+      config.headers['Authorization'] = `Bearer ${t}`;
+    }
+  } catch {}
+  return config;
+});
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>

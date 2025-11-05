@@ -30,6 +30,9 @@ function Login() {
         // Normalize and store auth user in Redux
             const d = res?.data;
             const auth = d?.user ?? d?.data ?? d;
+            if (d?.token) {
+              try { localStorage.setItem('auth_token', d.token); } catch {}
+            }
             if (auth) {
               dispatch(setAuthUser(auth));
             }

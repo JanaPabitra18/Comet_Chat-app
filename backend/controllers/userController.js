@@ -109,7 +109,7 @@ export const loginUser = async (req, res) => {
         // Optionally, you can issue a JWT token here for session management
         const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-        // Return success response
+        // Return success response (also include token for Authorization header fallback)
         return res.status(200).cookie("token", token, {
             httpOnly: true,
             sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
@@ -117,6 +117,7 @@ export const loginUser = async (req, res) => {
             path: '/',
             maxAge: 1*24*60*60*1000
         }).json({
+            token,
             _id: user._id,
             username: user.username,
             fullname: user.fullname,

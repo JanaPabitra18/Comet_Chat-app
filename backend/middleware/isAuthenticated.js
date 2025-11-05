@@ -4,8 +4,13 @@ const isAuthenticated = async (req, res, next) => {
     try {
        // console.log("In isAuthenticated middleware");
          console.log('Cookies:', req.cookies);  
-        const token = req.cookies.token ;
-       // console.log(token)
+        const cookieToken = req.cookies?.token;
+        let headerToken = null;
+        const authHeader = req.headers?.authorization || '';
+        if (authHeader.startsWith('Bearer ')) {
+            headerToken = authHeader.slice(7).trim();
+        }
+        const token = cookieToken || headerToken;
         if (!token){
         return res.status(401).json({ message: 'No token, authorization denied' });
         };
