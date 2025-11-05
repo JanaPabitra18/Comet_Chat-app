@@ -113,7 +113,7 @@ export const loginUser = async (req, res) => {
         return res.status(200).cookie("token", token, {
             httpOnly: true,
             sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-            secure: process.env.NODE_ENV === 'production',
+            secure: process.env.NODE_ENV === 'production' ? true : false,
             path: '/',
             maxAge: 1*24*60*60*1000
         }).json({
@@ -135,6 +135,7 @@ export const logoutUser = (req, res) => {
         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
         secure: process.env.NODE_ENV === 'production',
         path: '/',
+    
       });
       return res.status(200).json({message:"Logged out successfully"});
     }
