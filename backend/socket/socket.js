@@ -8,13 +8,40 @@ dotenv.config({});
 const app = express();
 
 const server = http.createServer(app);
-const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+
+// Normalize and build allowed origins (exact + wildcard patterns)
+const normalizeOrigin = (u) => (u || '')
+  .toString()
+  .trim()
+  .replace(/\/$/, '')
+  .toLowerCase();
+
+const exactOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
   .split(',')
-  .map((o) => o.trim());
+  .map((o) => normalizeOrigin(o));
+
+const rawPatterns = (process.env.CLIENT_ORIGIN_PATTERNS || '')
+  .split(',')
+  .map((p) => p.trim())
+  .filter(Boolean);
+
+const wildcardToRegex = (pattern) => {
+  const norm = pattern.replace(/\/$/, '').toLowerCase();
+  const escaped = norm.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+  const regexStr = '^' + escaped.replace(/\*/g, '.*') + '$';
+  try { return new RegExp(regexStr); } catch { return null; }
+};
+
+const originRegexes = rawPatterns
+  .map(wildcardToRegex)
+  .filter((r) => r instanceof RegExp);
+
+// Socket.IO accepts strings and RegExp in cors.origin
+const socketCorsOrigins = [...exactOrigins, ...originRegexes];
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: socketCorsOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
