@@ -22,6 +22,7 @@ const Sidebar = () => {
       dispatch(setSelectedUser(null));
       dispatch(setOtherUsers(null));
       dispatch(setMessages([]));
+      try { localStorage.removeItem('auth_token'); } catch {}
     } catch (error) {
       console.log(error);
     }
@@ -40,6 +41,12 @@ const Sidebar = () => {
       }
       dispatch(setOtherUsers(list));
     } catch (err) {
+      if (err?.response?.status === 401) {
+        toast.error("Session expired. Please log in again.");
+        try { localStorage.removeItem('auth_token'); } catch {}
+        navigate('/login');
+        return;
+      }
       toast.error("Search failed");
     }
   };

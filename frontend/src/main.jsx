@@ -28,6 +28,22 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
+// Global 401 handler: clear token and redirect to login
+axios.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    const status = err?.response?.status;
+    if (status === 401) {
+      try { localStorage.removeItem('auth_token'); } catch {}
+      // Avoid infinite redirects if already on login
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(err);
+  }
+);
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
