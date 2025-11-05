@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setOtherUsers ,setAuthUser, setSelectedUser} from "../redux/userSlice";
 import { setMessages } from "../redux/messageSlice";
-import { BASE_URL } from "../main.jsx";
+import { BASE_URL } from "../config.js";
 const Sidebar = () => {
   const [search, setSearch] = useState("");
   const { otherUsers } = useSelector((store) => store.user);

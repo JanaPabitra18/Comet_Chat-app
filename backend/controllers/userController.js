@@ -107,10 +107,16 @@ export const loginUser = async (req, res) => {
         };
         // const token= jwt.sign(tokenData, process.env.JWT_SECRET, {expiresIn:'1d'});
         // Optionally, you can issue a JWT token here for session management
-        const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: '1d' });
 
         // Return success response
-        return res.status(200).cookie("token", token, { httpOnly: true, sameSite: 'Lax',secure:process.env.NODE_ENV === 'production', maxAge: 1*24*60*60*1000 }).json({
+        return res.status(200).cookie("token", token, {
+            httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+            maxAge: 1*24*60*60*1000
+        }).json({
             _id: user._id,
             username: user.username,
             fullname: user.fullname,
@@ -126,7 +132,7 @@ export const logoutUser = (req, res) => {
     try{
       res.clearCookie('token', {
         httpOnly: true,
-        sameSite: 'Lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
         secure: process.env.NODE_ENV === 'production',
         path: '/',
       });

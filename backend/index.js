@@ -25,8 +25,13 @@ app.use(cookieParser());
 //     credentials:true,            //access-control-allow-credentials:true
 //     // optionSuccessStatus:200
 // }
+// Support multiple allowed origins via comma-separated CLIENT_ORIGIN
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim());
+
 app.use(cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true,   //access-control-allow-credentials:true
     optionSuccessStatus: 200
 }));
@@ -38,19 +43,6 @@ app.use("/api/v1/message",messageRoute);
 app.use("/api/v1/friends", friendRoute);
 
 // Resolve frontend dist path correctly in ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const clientDistPath = path.resolve(__dirname, '../frontend/dist');
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(clientDistPath));
-  app.use((req, res) => res.sendFile(path.join(clientDistPath, 'index.html')));
-} else {
-  app.use("/", (req, res) => {
-    res.send("API is running...");
-  });
-}
-
 server.listen( PORT, () => {
     connectDB();
     console.log(`Server is running on port ${PORT}`)

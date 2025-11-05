@@ -12,16 +12,21 @@
 
 
 /* Or, for Tailwind v4, if base/components are deprecated, use: */
+/* Brand Typography */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import "tailwindcss"; 
 @plugin "daisyui"; 
 
 :root {
+ --brand-primary: #F97316; /* orange-500 */
+ --brand-accent: #EC4899;  /* pink-500 */
+ --brand-purple: #8B5CF6;  /* violet-500 */
  background: url('/7.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -44,6 +49,44 @@
   --comet-tail: rgba(255, 255, 255, 0.25);
   --comet-glow: rgba(255, 150, 80, 0.45);
 } 
+
+/* Logo / Wordmark gradient utility */
+.logo-text {
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent), var(--brand-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Mobile-safe viewport insets and smoother scrolling */
+html, body {
+  height: 100%;
+  overscroll-behavior-y: contain;
+}
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+/* Base responsive typography for small screens */
+@media (max-width: 640px) {
+  h1 { font-size: 1.75rem; line-height: 2.25rem; }
+  h2 { font-size: 1.25rem; line-height: 1.75rem; }
+  p, label, input, button { font-size: 0.95rem; }
+}
+
+/* Improve default tap targets on mobile */
+button, .btn {
+  min-height: 44px; /* Apple HIG recommended tap size */
+}
+input, .input, textarea {
+  min-height: 44px;
+}
+input::placeholder, textarea::placeholder {
+  opacity: 0.9;
+}
 /* Comet background animation */
 .comet-container {
   position: fixed;

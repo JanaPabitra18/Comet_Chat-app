@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { setAuthUser } from '../redux/userSlice';
+import { BASE_URL } from '../config.js';
 function Login() {
      const [ user,setUser]=useState({
            
@@ -19,7 +20,7 @@ function Login() {
             e.preventDefault();
             // console.log(user);
              try{
-            const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/login`,user,{
+            const res=await axios.post(`${BASE_URL}/api/v1/user/login`,user,{
             headers:{
                 "Content-Type":"application/json"
             },
@@ -58,7 +59,7 @@ function Login() {
               <circle cx="18" cy="6" r="2" />
             </svg>
           </span>
-          <h1 className='text-3xl md:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500'>
+          <h1 className='logo-text text-3xl md:text-4xl font-extrabold tracking-tight'>
             Comet Chat
           </h1>
         </div>

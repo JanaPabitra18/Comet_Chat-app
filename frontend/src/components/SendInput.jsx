@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import axios from "axios";
 import { setMessages } from "../redux/messageSlice";
+import { BASE_URL } from "../config.js";
 function SendInput() {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ function SendInput() {
       // send message to backend using socket io
       axios.defaults.withCredentials = true;
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/message/send/${selectedUser?._id}`,
+        `${BASE_URL}/api/v1/message/send/${selectedUser?._id}`,
         { message },
         {
           headers: {
