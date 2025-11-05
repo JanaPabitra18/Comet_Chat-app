@@ -36,12 +36,35 @@ const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
   .split(',')
   .map((o) => normalizeOrigin(o));
 
+// Optional wildcard patterns, e.g. "*.netlify.app,https://*.mydomain.com"
+const rawPatterns = (process.env.CLIENT_ORIGIN_PATTERNS || '')
+  .split(',')
+  .map((p) => p.trim())
+  .filter(Boolean);
+
+// Convert wildcard patterns to regexes
+const wildcardToRegex = (pattern) => {
+  // Normalize (strip trailing slash, lowercase) but keep '*' to expand
+  const norm = pattern.replace(/\/$/, '').toLowerCase();
+  // Escape regex special chars except '*'
+  const escaped = norm.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+  // Replace '*' with '.*'
+  const regexStr = '^' + escaped.replace(/\*/g, '.*') + '$';
+  try { return new RegExp(regexStr); } catch { return null; }
+};
+
+const originRegexes = rawPatterns
+  .map(wildcardToRegex)
+  .filter((r) => r instanceof RegExp);
+
 const corsConfig = {
   origin: (origin, callback) => {
     // Allow non-browser requests (no origin) and matching origins
     if (!origin) return callback(null, true);
     const norm = normalizeOrigin(origin);
     if (allowedOrigins.includes(norm)) return callback(null, true);
+    // Fallback to wildcard pattern matching
+    if (originRegexes.some((rx) => rx.test(norm))) return callback(null, true);
     return callback(new Error(`CORS: Origin not allowed: ${origin}`));
   },
   credentials: true,
