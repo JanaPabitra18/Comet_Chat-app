@@ -33,7 +33,17 @@ const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,   //access-control-allow-credentials:true
+    methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
     optionSuccessStatus: 200
+}));
+
+// Explicitly handle CORS preflight for all routes
+app.options('*', cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
 }));
 
 

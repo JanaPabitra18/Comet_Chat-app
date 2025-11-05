@@ -38,7 +38,7 @@ function Login() {
         
     }catch(err){
             console.log(err);
-            toast.error(err.response.data.message);
+            toast.error(err?.response?.data?.message || 'Network error. Please check server/CORS settings.');
         }
         // Reset form after attempt
             setUser({
