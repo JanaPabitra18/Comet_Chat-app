@@ -75,23 +75,8 @@ const corsConfig = {
 
 app.use(cors(corsConfig));
 
-// Explicitly handle CORS preflight for all routes (Express 5 safe)
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    const origin = req.headers.origin;
-    if (!origin || allowedOrigins.includes(origin)) {
-      if (origin) {
-        res.header('Access-Control-Allow-Origin', origin);
-        res.header('Vary', 'Origin');
-      }
-      res.header('Access-Control-Allow-Credentials', 'true');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With');
-      return res.sendStatus(204);
-    }
-  }
-  next();
-});
+// Use cors to handle preflight consistently for all routes
+app.options('*', cors(corsConfig));
 
 
 //routes
