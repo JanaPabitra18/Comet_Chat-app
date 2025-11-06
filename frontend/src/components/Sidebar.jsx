@@ -34,7 +34,11 @@ const Sidebar = () => {
       const url = term
         ? `${BASE_URL}/api/v1/user?search=${encodeURIComponent(term)}`
         : `${BASE_URL}/api/v1/user/chats`;
-      const res = await axios.get(url, { withCredentials: true });
+      const token = (() => { try { return localStorage.getItem('auth_token'); } catch { return null; } })();
+      const res = await axios.get(url, {
+        withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
       const list = res?.data?.otheruser || [];
       if (term && list.length === 0) {
         toast.error("User not found");
