@@ -32,12 +32,12 @@ const normalizeOrigin = (u) => (u || '')
   .replace(/\/$/, '')
   .toLowerCase();
 
-const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173,https://comet-web.netlify.app')
   .split(',')
   .map((o) => normalizeOrigin(o));
 
 // Optional wildcard patterns, e.g. "*.netlify.app,https://*.mydomain.com"
-const rawPatterns = (process.env.CLIENT_ORIGIN_PATTERNS || '')
+const rawPatterns = (process.env.CLIENT_ORIGIN_PATTERNS || 'https://*.netlify.app')
   .split(',')
   .map((p) => p.trim())
   .filter(Boolean);
@@ -70,7 +70,7 @@ const corsConfig = {
   credentials: true,
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
-  optionSuccessStatus: 200,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsConfig));
