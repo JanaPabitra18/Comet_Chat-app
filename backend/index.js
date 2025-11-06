@@ -75,8 +75,8 @@ const corsConfig = {
 
 app.use(cors(corsConfig));
 
-// Use cors to handle preflight consistently for all routes
-app.options('*', cors(corsConfig));
+// Use cors to handle preflight consistently for all routes (use regex for Express compatibility)
+app.options(/.*/, cors(corsConfig));
 
 
 //routes
