@@ -14,12 +14,13 @@ const useGetOtherUsers = () => {
             try {
                 const token = (() => { try { return localStorage.getItem('auth_token'); } catch { return null; } })();
                 if (!token) return; // avoid unauthenticated request
-                const res = await axios.get(`${BASE_URL}/api/v1/user`, {
+                // Fetch only users with existing conversations (chat history)
+                const res = await axios.get(`${BASE_URL}/api/v1/user/chats`, {
                     withCredentials: true,
                     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
                 });
                 // store
-                console.log("other users -> ",res);
+                console.log("chat users -> ",res);
                 dispatch(setOtherUsers(res.data.otheruser));
             } catch (error) {
                 // Ignore unauthorized during initial load; user may not be logged in yet
