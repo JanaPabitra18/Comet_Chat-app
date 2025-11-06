@@ -83,3 +83,35 @@ export const fetchMessages = async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 }
+
+export const deleteConversation = async (req, res) => {
+    try {
+        const userId = req.id; // Authenticated user's ID
+        const otherUserId = req.params.id; // ID of the other user
+
+        // Find the conversation between the two users
+        const conversation = await Conversation.findOne({
+            participants: { $all: [userId, otherUserId] }
+        });
+
+        if (!conversation) {
+            return res.status(404).json({ message: "No conversation found" });
+        }
+
+        // Delete all messages in the conversation
+        await Message.deleteMany({
+            _id: { $in: conversation.messages }
+        });
+
+        // Delete the conversation itself
+        await Conversation.findByIdAndDelete(conversation._id);
+
+        return res.status(200).json({ 
+            message: "Conversation deleted successfully",
+            success: true 
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+}

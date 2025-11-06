@@ -1,16 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedUser } from "../redux/userSlice";
+import { setSelectedUser, setOtherUsers } from "../redux/userSlice";
+import { setMessages } from "../redux/messageSlice";
 import { fetchRelationshipStatus, sendFriendRequest, acceptFriendRequest } from "../redux/friendSlice";
+import axios from "axios";
+import { BASE_URL } from "../config.js";
+import toast from "react-hot-toast";
+import { BiTrash } from "react-icons/bi";
 
 function Otheruser({ user }) {
   const dispatch = useDispatch();
-  const { selectedUser, onlineUsers } = useSelector((store) => store.user);
+  const { selectedUser, onlineUsers, otherUsers } = useSelector((store) => store.user);
   const rel = useSelector((store) => store.friends.statusByUser[user?._id || user?.id]);
   const isOnline = onlineUsers?.includes(user?._id);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  
   const selectedUserHandler = (user) => {
     //  console.log(user);
     dispatch(setSelectedUser(user));
+  };
+
+  const handleDeleteChat = async (e) => {
+    e.stopPropagation();
+    if (!showDeleteConfirm) {
+      setShowDeleteConfirm(true);
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const token = localStorage.getItem('auth_token');
+      await axios.delete(`${BASE_URL}/api/v1/message/delete/${user._id}`, {
+        withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      
+      // Remove user from the list
+      const updatedUsers = otherUsers.filter(u => u._id !== user._id);
+      dispatch(setOtherUsers(updatedUsers));
+      
+      // Clear selected user and messages if this was the active chat
+      if (selectedUser?._id === user._id) {
+        dispatch(setSelectedUser(null));
+        dispatch(setMessages([]));
+      }
+      
+      toast.success('Chat deleted successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to delete chat');
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
   };
 
   useEffect(() => {
@@ -70,6 +113,37 @@ function Otheruser({ user }) {
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
+              {/* Delete chat button - only show for users with conversation history */}
+              {rel && rel.status === 'accepted' && (
+                <div className="relative">
+                  {showDeleteConfirm ? (
+                    <div className="flex gap-1 animate-fadeIn">
+                      <button
+                        className="btn btn-xs bg-red-500 hover:bg-red-600 text-white border-0 shadow-md transition-all"
+                        onClick={handleDeleteChat}
+                        disabled={isDeleting}
+                      >
+                        {isDeleting ? '...' : 'Yes'}
+                      </button>
+                      <button
+                        className="btn btn-xs bg-slate-600 hover:bg-slate-700 text-white border-0 shadow-md transition-all"
+                        onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(false); }}
+                      >
+                        No
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className="btn btn-xs btn-square bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 hover:text-red-300 transition-all"
+                      onClick={handleDeleteChat}
+                      title="Delete chat"
+                    >
+                      <BiTrash className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              )}
+              
               {(!rel || rel.status === 'none') && (
                 <button
                   className="btn btn-xs bg-gradient-to-r from-orange-500 to-pink-600 text-white border-0 hover:from-orange-600 hover:to-pink-700 shadow-md hover:shadow-lg transition-all"
