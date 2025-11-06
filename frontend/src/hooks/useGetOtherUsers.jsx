@@ -12,8 +12,11 @@ const useGetOtherUsers = () => {
         if (!authUser) return; // not authenticated yet
         const fetchOtherUsers = async () => {
             try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(`${BASE_URL}/api/v1/user`);
+                const token = (() => { try { return localStorage.getItem('auth_token'); } catch { return null; } })();
+                const res = await axios.get(`${BASE_URL}/api/v1/user`, {
+                    withCredentials: true,
+                    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+                });
                 // store
                 console.log("other users -> ",res);
                 dispatch(setOtherUsers(res.data.otheruser));
