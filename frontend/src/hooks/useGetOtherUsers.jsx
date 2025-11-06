@@ -13,6 +13,7 @@ const useGetOtherUsers = () => {
         const fetchOtherUsers = async () => {
             try {
                 const token = (() => { try { return localStorage.getItem('auth_token'); } catch { return null; } })();
+                if (!token) return; // avoid unauthenticated request
                 const res = await axios.get(`${BASE_URL}/api/v1/user`, {
                     withCredentials: true,
                     headers: token ? { Authorization: `Bearer ${token}` } : undefined,

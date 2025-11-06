@@ -35,6 +35,7 @@ const Sidebar = () => {
         ? `${BASE_URL}/api/v1/user?search=${encodeURIComponent(term)}`
         : `${BASE_URL}/api/v1/user/chats`;
       const token = (() => { try { return localStorage.getItem('auth_token'); } catch { return null; } })();
+      if (!token) { navigate('/login'); return; }
       const res = await axios.get(url, {
         withCredentials: true,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
