@@ -11,6 +11,7 @@ import { setSocket } from './redux/socketSlice';
 import { setOnlineUsers } from './redux/userSlice';
 import { SOCKET_URL } from './config.js';
 import CometBackground from './components/CometBackground';
+import ConversationPage from './components/ConversationPage';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path:"/login",
     element:<Login/>
+  },
+  {
+    path:"/chat/:id",
+    element:<ConversationPage/>
   },
 
 ])

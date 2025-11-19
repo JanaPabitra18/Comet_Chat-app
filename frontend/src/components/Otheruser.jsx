@@ -7,6 +7,7 @@ import axios from "axios";
 import { BASE_URL } from "../config.js";
 import toast from "react-hot-toast";
 import { BiTrash } from "react-icons/bi";
+import { useNavigate } from 'react-router-dom';
 
 function Otheruser({ user }) {
   const dispatch = useDispatch();
@@ -15,10 +16,16 @@ function Otheruser({ user }) {
   const isOnline = onlineUsers?.includes(user?._id);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
   
   const selectedUserHandler = (user) => {
-    //  console.log(user);
     dispatch(setSelectedUser(user));
+    try {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        const uid = user?._id || user?.id;
+        if (uid) navigate(`/chat/${uid}`);
+      }
+    } catch {}
   };
 
   const handleDeleteChat = async (e) => {
@@ -166,7 +173,16 @@ function Otheruser({ user }) {
               {rel && rel.status === 'accepted' && (
                 <button
                   className="btn btn-xs bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0 hover:from-blue-600 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all"
-                  onClick={(e) => { e.stopPropagation(); dispatch(setSelectedUser(user)); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(setSelectedUser(user));
+                    try {
+                      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                        const uid = user?._id || user?.id;
+                        if (uid) navigate(`/chat/${uid}`);
+                      }
+                    } catch {}
+                  }}
                 >
                   Chat
                 </button>
