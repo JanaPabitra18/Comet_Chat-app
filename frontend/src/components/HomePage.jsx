@@ -12,7 +12,7 @@ const HomePage = () => {
       <div className='w-full'>
         {/* Brand Header */}
         <header className='w-full mb-3 md:mb-4'>
-          <div className='max-w-6xl mx-auto px-3 flex items-center justify-center gap-3'>
+          <div className='max-w-6xl mx-auto px-3 flex items-center gap-3'>
             <span className='inline-flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-pink-600 shadow-2xl'>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className='h-5 w-5 md:h-6 md:w-6'>
                 <path d="M2 12c4-1 7-3 10-6 0 4 2 7 6 10-3 1-6 2-9 2s-6-1-7-6z"/>
@@ -39,11 +39,6 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <footer className='w-full mt-6'>
-          <div className='max-w-6xl mx-auto px-3 text-center text-slate-400 text-sm'>
-            © {new Date().getFullYear()} Comet Chat · All rights reserved
-          </div>
-        </footer>
       </div>
     )
   }
@@ -52,7 +47,7 @@ const HomePage = () => {
     <div className='w-full'>
       {/* Brand Header */}
       <header className='w-full mb-3 md:mb-4'>
-        <div className='max-w-6xl mx-auto px-3 flex items-center justify-center gap-3'>
+        <div className='max-w-6xl mx-auto px-3 flex items-center gap-3'>
           <span className='inline-flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-pink-600 shadow-2xl'>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className='h-5 w-5 md:h-6 md:w-6'>
               <path d="M2 12c4-1 7-3 10-6 0 4 2 7 6 10-3 1-6 2-9 2s-6-1-7-6z"/>
@@ -78,11 +73,6 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-      <footer className='w-full mt-6'>
-        <div className='max-w-6xl mx-auto px-3 text-center text-slate-400 text-sm'>
-          © {new Date().getFullYear()} Comet Chat · All rights reserved
-        </div>
-      </footer>
     </div>
   )
 }

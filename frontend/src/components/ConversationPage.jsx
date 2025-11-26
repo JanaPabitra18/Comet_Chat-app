@@ -23,8 +23,9 @@ const ConversationPage = () => {
       <header className='w-full mb-3 md:mb-4'>
         <div className='max-w-6xl mx-auto px-3 flex items-center gap-3'>
           <button
-            onClick={() => navigate('/')}
+            type="button"
             className="btn btn-sm bg-neutral-800 border border-slate-700/60 text-slate-200 hover:bg-neutral-700"
+            onClick={() => { dispatch(setSelectedUser(null)); navigate('/', { replace: true }); }}
           >
             Back
           </button>

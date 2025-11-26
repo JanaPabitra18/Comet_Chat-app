@@ -32,7 +32,7 @@ const normalizeOrigin = (u) => (u || '')
   .replace(/\/$/, '')
   .toLowerCase();
 
-const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173,https://comet-web.netlify.app')
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173,https://comet-chat-web.netlify.app/')
   .split(',')
   .map((o) => normalizeOrigin(o));
 

@@ -31,7 +31,7 @@ function Login() {
             const d = res?.data;
             const auth = d?.user ?? d?.data ?? d;
             if (d?.token) {
-              try { localStorage.setItem('auth_token', d.token); } catch {}
+              try { localStorage.setItem('auth_token', d.token); } catch { /* ignore localStorage errors */ }
             }
             if (auth) {
               dispatch(setAuthUser(auth));
@@ -56,7 +56,7 @@ function Login() {
       {/* Brand Header */}
       <header className='w-full mb-6'>
         <div className='max-w-6xl mx-auto px-3 flex items-center gap-3'>
-          <span className='inline-flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-pink-600 shadow-lg'>
+          <span className='inline-flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-linear-to-r from-orange-500 to-pink-600 shadow-lg'>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className='h-5 w-5 md:h-6 md:w-6'>
               <path d="M2 12c4-1 7-3 10-6 0 4 2 7 6 10-3 1-6 2-9 2s-6-1-7-6z"/>
               <circle cx="18" cy="6" r="2" />

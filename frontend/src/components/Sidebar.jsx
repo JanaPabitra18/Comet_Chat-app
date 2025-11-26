@@ -11,7 +11,7 @@ import { setMessages } from "../redux/messageSlice";
 import { BASE_URL } from "../config.js";
 const Sidebar = () => {
   const [search, setSearch] = useState("");
-  const { otherUsers } = useSelector((store) => store.user);
+  useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutHandler = async () => {
@@ -23,7 +23,7 @@ const Sidebar = () => {
       dispatch(setSelectedUser(null));
       dispatch(setOtherUsers(null));
       dispatch(setMessages([]));
-      try { localStorage.removeItem('auth_token'); } catch {}
+      try { localStorage.removeItem('auth_token'); } catch { /* ignore errors */ }
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +50,7 @@ const Sidebar = () => {
     } catch (err) {
       if (err?.response?.status === 401) {
         toast.error("Session expired. Please log in again.");
-        try { localStorage.removeItem('auth_token'); } catch {}
+        try { localStorage.removeItem('auth_token'); } catch { /* ignore errors */ }
         navigate('/login');
         return;
       }
@@ -94,7 +94,7 @@ const Sidebar = () => {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 md:py-3 bg-gradient-to-br from-white/95 to-slate-50/95 text-slate-900 placeholder-slate-500 rounded-xl border-2 border-slate-300/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-orange-500/50 shadow-sm hover:shadow-md focus:shadow-lg transition-all duration-300 font-medium text-sm md:text-base"
+                className="w-full pl-10 pr-4 py-2.5 md:py-3 bg-linear-to-br from-white/95 to-slate-50/95 text-slate-900 placeholder-slate-500 rounded-xl border-2 border-slate-300/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-orange-500/50 shadow-sm hover:shadow-md focus:shadow-lg transition-all duration-300 font-medium text-sm md:text-base"
                 type="text"
                 placeholder="Search users..."
               />

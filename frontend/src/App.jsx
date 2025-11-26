@@ -11,7 +11,6 @@ import { setSocket } from './redux/socketSlice';
 import { setOnlineUsers } from './redux/userSlice';
 import { SOCKET_URL } from './config.js';
 import CometBackground from './components/CometBackground';
-import ConversationPage from './components/ConversationPage';
 
 const router = createBrowserRouter([
   {
@@ -25,10 +24,6 @@ const router = createBrowserRouter([
   {
     path:"/login",
     element:<Login/>
-  },
-  {
-    path:"/chat/:id",
-    element:<ConversationPage/>
   },
 
 ])
@@ -45,12 +40,19 @@ function App() {
             userId:authUser._id
           }
       });
-      dispatch(setSocket(socketio));
-
-      socketio?.on('getOnlineUsers', (onlineUsers)=>{
+      // Attach listeners BEFORE storing socket anywhere
+      socketio.on('getOnlineUsers', (onlineUsers)=>{
         dispatch(setOnlineUsers(onlineUsers))
       });
-      return () => socketio.close();
+
+      // Now store socket in Redux
+      dispatch(setSocket(socketio));
+
+      // Clean up listeners and close socket
+      return () => {
+        try { socketio.off('getOnlineUsers'); } catch {}
+        try { socketio.close(); } catch {}
+      };
     }else{
       if(socket){
         socket.close();
